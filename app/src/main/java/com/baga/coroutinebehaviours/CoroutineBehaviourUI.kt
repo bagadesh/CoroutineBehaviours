@@ -1,25 +1,27 @@
 package com.baga.coroutinebehaviours
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.navigation.NavController
+import com.baga.coroutinebehaviours.cancellation.CoroutineCancellationsUI
 import kotlin.time.ExperimentalTime
-import kotlin.time.TimeSource
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun CoroutineBehaviourUI() {
+fun CoroutineBehaviourUI(navController: NavController) {
 
     val count = 10
     val listOfStates = remember {
@@ -31,7 +33,10 @@ fun CoroutineBehaviourUI() {
     }
 
     LazyColumn(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(10.dp),
         contentPadding = PaddingValues(10.dp),
     ) {
         items(count) {
@@ -41,8 +46,20 @@ fun CoroutineBehaviourUI() {
                         "Dispatcher.Main.Immediate",
                         listOfStates[it], {
                             listOfStates[it] = !listOfStates[it]
-                        }, {
+                        }, {}, {
                             DispatchersTesting()
+                        }
+                    )
+                }
+                1 -> {
+                    ExpandableButton(
+                        "Coroutine Cancellation",
+                        listOfStates[it], {
+                            listOfStates[it] = !listOfStates[it]
+                        }, {
+                            navController.navigate("CancellableAbout")
+                        }, {
+                            CoroutineCancellationsUI()
                         }
                     )
                 }
@@ -58,21 +75,37 @@ fun CoroutineBehaviourUI() {
 }
 
 
-
 @Composable
 fun ExpandableButton(
     title: String,
     viewContent: Boolean,
     itemClick: () -> Unit,
+    helpIconClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
 
-    Column {
-        Button(onClick = {
-            itemClick()
-        }) {
-            Text(text = title)
+    Column(
+        modifier = Modifier.padding(5.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(onClick = {
+                itemClick()
+            }) {
+                Text(text = title)
+            }
+            IconButton(onClick = {
+                helpIconClick()
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_help_24),
+                    contentDescription = "Help Docs",
+                    tint = Color.Black
+                )
+            }
         }
+
         if (viewContent) {
             content()
         }
