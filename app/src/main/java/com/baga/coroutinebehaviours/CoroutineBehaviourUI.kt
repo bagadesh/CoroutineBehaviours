@@ -16,7 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.baga.coroutinebehaviours.async.AsyncUI
 import com.baga.coroutinebehaviours.cancellation.CoroutineCancellationsUI
+import com.baga.coroutinebehaviours.javabasic.JavaBasic
+import com.baga.coroutinebehaviours.yield.YieldUI
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -60,6 +63,42 @@ fun CoroutineBehaviourUI(navController: NavController) {
                             navController.navigate("CancellableAbout")
                         }, {
                             CoroutineCancellationsUI()
+                        }
+                    )
+                }
+                2 -> {
+                    ExpandableButton(
+                        "Yield Coroutine",
+                        listOfStates[it], {
+                            listOfStates[it] = !listOfStates[it]
+                        }, {
+                            //navController.navigate("CancellableAbout")
+                        }, {
+                            YieldUI()
+                        }
+                    )
+                }
+                3 -> {
+                    ExpandableButton(
+                        "JavaBasic",
+                        listOfStates[it], {
+                            listOfStates[it] = !listOfStates[it]
+                        }, {
+                            //navController.navigate("CancellableAbout")
+                        }, {
+                            JavaBasic()
+                        }
+                    )
+                }
+                4 -> {
+                    ExpandableButton(
+                        "AsyncUI",
+                        listOfStates[it], {
+                            listOfStates[it] = !listOfStates[it]
+                        }, {
+                            //navController.navigate("CancellableAbout")
+                        }, {
+                            AsyncUI()
                         }
                     )
                 }
